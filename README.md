@@ -33,15 +33,16 @@
 ## 🧑‍💻 연관 관계 설계
 
 - `User : Project = 1 : N` => **단방향 관계 수립**
-    - User 수정, 삭제 기능 없음 -> User가 Project를 관리할 필요 없음.
+    - User가 Project의 수정, 삭제에 대해 실시간 동기화할 필요 없음
     - 따라서 복잡성만 증가시키는 양방향 관계 사용 X
 
 - `Project : Application = 1 : N` => **양방향 관계 수립**
-    - Project 수정, 삭제 기능 존재 -> Project 변경에 따라 Application을 관리할 필요가 있음
+    - Project 삭제 시 생길 수 있는 Applciation 고아 관리의 필요성
     - 프로젝트 복잡성이 커질수록, JPA에게 자식 엔티티의 생명주기를 맡기는 것이 유리
 
 ### 🔥 주요 사안
 
+- 자식 엔티티의 수정, 삭제로 인한 부모 엔티티 컬렉션의 변화 & 쿼리 발생 
 - Cascade.REMOVE vs orphanRemoval = true
 
 ---
@@ -73,3 +74,4 @@
 ## ⚠️ 보완할 점 & 개선 아이디어
 
 - `Project` 엔티티의 `tech_stack`을 1:N 관계 테이블로 분리 => 테이블 복잡도 감소, 의미 명확성 개선
+- `Project` 와 `Application`의 `@OneToMany` 관계에 따른 JPA 내부에서 발생하는 쿼리 동작에 대한 테스트 추가
